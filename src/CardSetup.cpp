@@ -18,7 +18,6 @@
 #include <iterator>
 #include <tuple>
 #include <memory>
-#include <openssl/sha.h>
 
 #include "scc-toolkit.h"
 #include "Modem_Connector.h"
@@ -64,9 +63,17 @@ scc::OctetString readCert(std::string derCertFileName)
 ////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////
-int main() {
-
+int main(int argc, char** argv) {
+	if (argc!=4){
+		std::cout << "Usage:"<< argv[0] << " <private-key-path> <device-certificate-path> <ca-certificate-path> " << std::endl;
+		return 0;
+	}
     std::cout << "Import device private key and certificate" << std::endl;
+	std::cout << "Private key: " << argv[1] << std::endl;
+	std::cout << "Device certificate: " << argv[2] << std::endl;
+	std::cout << "CA certificate: " << argv[3] << std::endl;
+
+
 
     std::unique_ptr<scc::UICC_Connector> pIfd;
 
@@ -124,7 +131,7 @@ int main() {
         std::cout << "***********************" << std::endl;
         std::cout << "*** RSA Private Key ***" << std::endl;
         std::cout << "************************" << std::endl;
-        auto rsaPrivateKeyData = readCert("/home/pi/302220601105002.der.key");
+        auto rsaPrivateKeyData = readCert(argv[1]);
 		sccApp.createEntry(
 		                    0x2001,
 		                    DEVICE_PRIVATE_KEY,
@@ -149,7 +156,7 @@ int main() {
         ////////////////////////////////////////////////////////////////////////
          // Read device certificate and store on card
          ////////////////////////////////////////////////////////////////////////
-         auto rsaCertData = readCert("/home/pi/302220601105002.der.crt");
+         auto rsaCertData = readCert(argv[2]);
 
          sccApp.createCertificate(
                      0x5001,
@@ -169,7 +176,7 @@ int main() {
          ////////////////////////////////////////////////////////////////////////
           // Read root CA certificate and store on card
           ////////////////////////////////////////////////////////////////////////
-          auto rsaCACertData = readCert("/home/pi/digicert-ca.der.crt");
+          auto rsaCACertData = readCert(argv[3]);
 
           sccApp.createCertificate(
                       0x5022,
