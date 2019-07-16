@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<scc::UICC_Connector> pIfd;
 
     //try connecting to the modem first
-    std::vector<std::string> portList { "/dev/ttyUSB2", "/dev/ttyUSB1" };
+    std::vector<std::string> portList { "/dev/ttyS0", "/dev/ttyUSB2", "/dev/ttyUSB1",  "/dev/ttyUSB0", "/dev/ttyUSB3" };
     //try each Port until we find one with the Modem and SCC applet
     for (std::string tstPortName: portList)
         try {
